@@ -1,0 +1,9 @@
+!function($,window,document,_undefined)
+{$(function(){if($('.SamRotator').length){$('.SamRotator').each(function(){var _this=$(this);var adList=_this.find('li');var SamLink=_this.find('.SamLink');var adCount=adList.length;setInterval(function(){adList.each(function(){var index=adList.index($(this));if($(this).is(':visible')){$(this).hide();if(index==(adCount-1)){adList.eq(0).fadeIn();actionCountView(SamLink.eq(0));}else{adList.eq(index+1).fadeIn();actionCountView(SamLink.eq(index+1));}
+return false;}});if(!_this.find('li:visible').length){adList.eq(0).fadeIn();}},_this.data('interval')*1000);});}});var ajaxPath='index.php?ajax/adAction';function isScrolledIntoView(elem){var docViewTop=$(window).scrollTop();var docViewBottom=docViewTop+$(window).height();var elemTop=$(elem).offset().top;var elemBottom=elemTop+$(elem).height();return((elemBottom<=docViewBottom)&&(elemTop>=docViewTop));}
+function actionCountView($item){$item.each(function(){if(isScrolledIntoView($item)){if($item.data('cv')&&$item.is(':visible')&&!$item.attr('data-viewed')){var id=$item.data('id');XenForo.ajax(ajaxPath,{action:'view',id:id},function(){},{global:false,error:false});$('.SamLink[data-id="'+id+'"]').attr('data-viewed',1);}}});}
+function sendAction($item){if($item.data('cc')&&!$item.attr('data-clicked')){var id=$item.data('id');XenForo.ajax(ajaxPath,{action:'click',id:id},function(){$('.SamLink[data-id="'+id+'"]').attr('data-clicked',1);},{global:false,error:false});}}
+XenForo.SamLink=function($item){if(!window.location.hash){actionCountView($item);}
+$(window).scroll(function(){actionCountView($item);});$item.click(function(){sendAction($item);});if($item.find('object').length||$item.find('embed').length){$item.mousedown(function(){setTimeout(function(){sendAction($item);},1000);});}}
+XenForo.register('.SamLink','XenForo.SamLink');}
+(jQuery,this,document);
